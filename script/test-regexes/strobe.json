@@ -1,0 +1,27 @@
+{
+    "header_parts": [
+        {
+            "Capture": {
+                "prefix": "(?:\r\n|^)Subject: (?:=\\?utf-8\\?Q\\?[^?]*\\?=)?\\s*",
+                "capture": "[A-Z]{2,5}",
+                "suffix": " is"
+            }
+        },
+        {
+            "Capture": {
+                "prefix": "(?:\r\n|^)DKIM-Signature: v=1;[^;]*;[^;]*;[^;]*;[^;]*;[^;]*; t=",
+                "capture": "[0-9]+",
+                "suffix": ";"
+            }
+        }
+    ],
+    "body_parts": [
+        {
+            "Capture": {
+                "prefix": ">[\\$]",
+                "capture": "[0-9,.]+",
+                "suffix": ""
+            }
+        }
+    ]
+}

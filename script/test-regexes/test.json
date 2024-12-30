@@ -1,0 +1,19 @@
+{
+    "header_parts": [],
+    "body_parts": [
+        {
+            "Capture": {
+                "prefix": "Accept guardian request for ",
+                "capture": "0x[a-fA-F0-9]{40}",
+                "suffix": " code "
+            }
+        },
+        {
+            "Capture": {
+                "prefix": "Accept guardian request for 0x[a-fA-F0-9]{40} code ",
+                "capture": "[a-fA-F0-9]{64}",
+                "suffix": ""
+            }
+        }
+    ]
+}

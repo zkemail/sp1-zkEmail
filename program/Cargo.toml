@@ -1,0 +1,8 @@
+[package]
+version = "0.1.0"
+name = "program"
+edition = "2021"
+
+[dependencies]
+sp1-zkvm = { workspace = true }
+zkemail-core = { workspace = true, features = ["sp1"] }

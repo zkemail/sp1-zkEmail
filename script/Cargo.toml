@@ -1,0 +1,28 @@
+[package]
+version = "0.1.0"
+name = "script"
+edition = "2021"
+default-run = "host"
+
+[[bin]]
+name = "host"
+path = "src/bin/main.rs"
+
+[[bin]]
+name = "evm"
+path = "src/bin/evm.rs"
+
+[dependencies]
+alloy-sol-types = { workspace = true }
+sp1-sdk = { workspace = true }
+serde_json = { workspace = true }
+serde = { workspace = true }
+clap = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
+hex = { workspace = true }
+zkemail-core = { workspace = true, features = ["sp1"] }
+zkemail-helpers = { workspace = true }
+
+[build-dependencies]
+sp1-helper = { workspace = true }

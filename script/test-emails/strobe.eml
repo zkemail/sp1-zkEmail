@@ -1,0 +1,397 @@
+Delivered-To: rohan@strobe.org
+Received: by 2002:adf:f591:0:b0:377:b398:d909 with SMTP id f17csp2136103wro;
+        Mon, 4 Nov 2024 11:55:12 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFl0MBE+NcDl6ormSmMaWhUyLt8Og+DidJETWpIwWmGkRTXUwMAFff90rn/mmtCz3N1WCXd
+X-Received: by 2002:a05:600c:5250:b0:431:5465:8072 with SMTP id 5b1f17b1804b1-43283294a9emr164867195e9.31.1730750111886;
+        Mon, 04 Nov 2024 11:55:11 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1730750111; cv=none;
+        d=google.com; s=arc-20240605;
+        b=WgJwMEI2CiNoufmmyzXOOJEvsN6oPoUe5orbrMFWJI2Qvv6xa7qA8KuKTW6jkkffkd
+         Sp7UtouKq5F0PxJGrJ6Quc4rX53oh+0+vLCDRKxZY8OhIr4P+Jzh+eQ/3fo+HE8te3Ot
+         lgJ/mLqO9XpIt0wNomAVwJi1srQTo6/v24RMjzlQKUSWw+IpSub1KMiAy2I3YyVplvqt
+         35C0JeYdDuznbKhM6F4kiWy0v230s54HZiJeQfvYKS3+8pLUMecpSy5rgFvaAN40J6e/
+         Y/PTG90HYA1j2SR3tRYkAu1A67gOAkea9m/8ZUih0yUQu/qUDIvZIs0ckcZk25O1sqyn
+         xUMw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=feedback-id:date:mime-version:message-id:subject:to:from
+         :dkim-signature:dkim-signature;
+        bh=Wbk/0C6muF+hkiCBRsSnbouTK7VrQzFNFg0FUJdaAow=;
+        fh=qi0znJXAvtn60i+WUE7++1VJOh3PkjvzY4XJf/tcmMg=;
+        b=MCAt/oQCZNsTLPU525EfQhLzqt5hyLLdNek6KhVVK5WfF4ftJ7huV1GVyndtJZuXKi
+         7bhzRkPAxRKjqzjK8pNdHiu63dAG87LuSMwZbtxUtyR8XWsLmjXau4Gmo5WRH7MBUq9B
+         YCwu25TESpWQrxpt2qSL10u1ykfZ8nNTmHe7tlXTacjwqf+bax71S9IzH1qJNpwrF4J5
+         m5AWF4PclRP2NLRpfmtaKbtCZ0K3gHzQU+Juwquku/WnI2emhelMuwmMzw/7z3jWTSe7
+         DghT/O1k632NM2Qdh3BjYSfyel/LfqQs02clgd4UbxkfmUorqYaTxUfQKF01ZDvyuW35
+         7OMQ==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@cryptoradar.com header.s=ez5fdfeqyxjjof6psrzjbiqfmtoen2xs header.b="ZUA/QK+y";
+       dkim=pass header.i=@amazonses.com header.s=uku4taia5b5tsbglxyj6zym32efj7xqv header.b=ZldbWoLL;
+       spf=pass (google.com: domain of 01020192f8bede0a-883757c1-f907-47c8-bf8c-72cb7041036f-000000@eu-west-1.amazonses.com designates 54.240.7.13 as permitted sender) smtp.mailfrom=01020192f8bede0a-883757c1-f907-47c8-bf8c-72cb7041036f-000000@eu-west-1.amazonses.com
+Return-Path: <01020192f8bede0a-883757c1-f907-47c8-bf8c-72cb7041036f-000000@eu-west-1.amazonses.com>
+Received: from a7-13.smtp-out.eu-west-1.amazonses.com (a7-13.smtp-out.eu-west-1.amazonses.com. [54.240.7.13])
+        by mx.google.com with ESMTPS id 5b1f17b1804b1-431bd90ff2esi81333525e9.75.2024.11.04.11.55.11
+        for <rohan@strobe.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 Nov 2024 11:55:11 -0800 (PST)
+Received-SPF: pass (google.com: domain of 01020192f8bede0a-883757c1-f907-47c8-bf8c-72cb7041036f-000000@eu-west-1.amazonses.com designates 54.240.7.13 as permitted sender) client-ip=54.240.7.13;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@cryptoradar.com header.s=ez5fdfeqyxjjof6psrzjbiqfmtoen2xs header.b="ZUA/QK+y";
+       dkim=pass header.i=@amazonses.com header.s=uku4taia5b5tsbglxyj6zym32efj7xqv header.b=ZldbWoLL;
+       spf=pass (google.com: domain of 01020192f8bede0a-883757c1-f907-47c8-bf8c-72cb7041036f-000000@eu-west-1.amazonses.com designates 54.240.7.13 as permitted sender) smtp.mailfrom=01020192f8bede0a-883757c1-f907-47c8-bf8c-72cb7041036f-000000@eu-west-1.amazonses.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=ez5fdfeqyxjjof6psrzjbiqfmtoen2xs; d=cryptoradar.com;
+	t=1730750111;
+	h=From:To:Subject:Message-ID:MIME-Version:Date:Content-Type;
+	bh=Wbk/0C6muF+hkiCBRsSnbouTK7VrQzFNFg0FUJdaAow=;
+	b=ZUA/QK+yisKAG1bsCK/pHLZ0OnHKoRWSQ+PCwa0DZKdAeBdawGCoS8hPZByjpS9A
+	x7E3zCCGoxqP83rmM3YEUz1ppTgNJqEsEcU2kJEn+K1aXW9LeHAwyLFPTXFdOR0kgbD
+	h5ZNzhdUk301PKldYPsrJqV6Fm90wU7ljb/xkTge2fg7uFqOvD86+JqT63vyQw6O1n9
+	MEBmHKBvZNnLAxY3dmX2abDGdBhTPYl6KXof9LsQAHfBcEx9ozFgnDR4I0D3/fumbDg
+	dnhU0fmaSth3OevOUsj+2AxvtLI+1MJRY4cpA31wBB+IkpUoECgx6ya/731ocgpxp95
+	dT+9So2nGA==
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=uku4taia5b5tsbglxyj6zym32efj7xqv; d=amazonses.com; t=1730750111;
+	h=From:To:Subject:Message-ID:MIME-Version:Date:Content-Type:Feedback-ID;
+	bh=Wbk/0C6muF+hkiCBRsSnbouTK7VrQzFNFg0FUJdaAow=;
+	b=ZldbWoLLWKWGo9Lu32+bH9kX5RCIq9tETqk/n78h/0NclnbOH0FSUI0e2k2KMKGY
+	sSwDjkRRK3IUGDJjKT9jhuxCL9KsmgeRjfPTJwtRpsrvPwQV2p0P6QC0Pz4YgZIDGtM
+	cuzAUaLwXsS1R6I8LUwl0H8rIM6Rik4dwZZ8livY=
+From: Cryptoradar <pricealert@cryptoradar.com>
+To: rohan@strobe.org
+Subject: =?utf-8?Q?=E2=9A=A0=EF=B8=8F?= ETH is Down 0.9%!
+Message-ID: <01020192f8bede0a-883757c1-f907-47c8-bf8c-72cb7041036f-000000@eu-west-1.amazonses.com>
+MIME-Version: 1.0
+Date: Mon, 4 Nov 2024 19:55:11 +0000
+Content-Type: multipart/alternative; boundary=blU0r1zG
+Feedback-ID: ::1.eu-west-1.k7z/bL2frS+rbwGEg+GcKGD0ZG2ZFeYKr53KGTazAn8=:AmazonSES
+X-SES-Outgoing: 2024.11.04-54.240.7.13
+
+--blU0r1zG
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Cryptoradar: https://cryptoradar.com
+
+# Price Alert for Ethereum
+**Et=
+hereum (ETH)** has dropped **0.9 %** in the last 24 hours, now priced at **=
+$2,433.41** on Binance.
+
+Internal memo: **test**
+
+Go To Price Compa=
+rison: https://cryptoradar.com/buy-ethereum
+
+Regards,The Cryptoradar Te=
+am
+
+You're receiving this mail because you set a price alert 30 minutes=
+ ago. [Manage your price alerts](https://cryptoradar.com/price-alerts) or [=
+disable them](https://cryptoradar.com/price-alert/disable?user_id=3D23932&s=
+ignature=3D664dfc9802c7dbad72bcd5de44925bd174e8e1f8da4fa7f78d2e0438def1a659=
+).
+
+You are watching **Ethereum** on **Binance**. You will be notified =
+every **30 minutes** by **Email**.
+
+=C2=A9 2024 Cryptoradar. All rights=
+ reserved.
+
+--blU0r1zG
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.=
+w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns=3D"http://www.=
+w3.org/1999/xhtml">
+<head>
+<meta name=3D"viewport" content=3D"width=3Dd=
+evice-width, initial-scale=3D1.0">
+<meta http-equiv=3D"Content-Type" cont=
+ent=3D"text/html; charset=3DUTF-8">
+<meta name=3D"color-scheme" content=
+=3D"light">
+<meta name=3D"supported-color-schemes" content=3D"light">
+<=
+style>
+@media only screen and (max-width: 600px) {
+.inner-body {
+widt=
+h: 100% !important;
+}
+
+.footer {
+width: 100% !important;
+}
+}
+=
+
+@media only screen and (max-width: 500px) {
+.button {
+width: 100% !i=
+mportant;
+}
+}
+</style>
+</head>
+<body style=3D"box-sizing: border-=
+box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, He=
+lvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe U=
+I Symbol'; position: relative; -webkit-text-size-adjust: none; background-c=
+olor: #eef1f8; color: #212529; height: 100%; line-height: 1.4; margin: 0; p=
+adding: 0; width: 100% !important;">
+
+<table class=3D"wrapper" width=3D=
+"100%" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" style=3D"b=
+ox-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Seg=
+oe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe U=
+I Emoji', 'Segoe UI Symbol'; position: relative; -premailer-cellpadding: 0;=
+ -premailer-cellspacing: 0; -premailer-width: 100%; background-color: #eef1=
+f8; margin: 0; padding: 0; width: 100%;">
+<tr>
+<td align=3D"center" sty=
+le=3D"box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFon=
+t, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', '=
+Segoe UI Emoji', 'Segoe UI Symbol'; position: relative;">
+<table class=3D=
+"content" width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" role=3D"presen=
+tation" style=3D"box-sizing: border-box; font-family: -apple-system, BlinkM=
+acSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Colo=
+r Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; -premail=
+er-cellpadding: 0; -premailer-cellspacing: 0; -premailer-width: 100%; margi=
+n: 0; padding: 0; width: 100%;">
+<tr>
+<td class=3D"header" style=3D"box=
+-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe=
+ UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI =
+Emoji', 'Segoe UI Symbol'; position: relative; padding: 25px 0; text-align:=
+ center;">
+<a href=3D"https://cryptoradar.com" style=3D"box-sizing: borde=
+r-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, =
+Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe=
+ UI Symbol'; position: relative; color: #3d4852; font-size: 19px; font-weig=
+ht: bold; text-decoration: none; display: inline-block;">
+=C2=A0<img src=
+=3D"https://cryptoradar.com/images/logo.svg" alt=3D"Cryptoradar" style=3D"b=
+ox-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Seg=
+oe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe U=
+I Emoji', 'Segoe UI Symbol'; position: relative; max-width: 100%; border: n=
+one;">
+</a>
+</td>
+</tr>
+
+<!-- Email Body -->
+<tr>
+<td class=
+=3D"body" width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" style=3D"box-s=
+izing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe U=
+I', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Em=
+oji', 'Segoe UI Symbol'; position: relative; -premailer-cellpadding: 0; -pr=
+emailer-cellspacing: 0; -premailer-width: 100%; background-color: #edf2f7; =
+border-bottom: 1px solid #edf2f7; border-top: 1px solid #edf2f7; margin: 0;=
+ padding: 0; width: 100%;">
+<table class=3D"inner-body" align=3D"center" =
+width=3D"570" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" sty=
+le=3D"box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFon=
+t, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', '=
+Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; -premailer-cellpadd=
+ing: 0; -premailer-cellspacing: 0; -premailer-width: 570px; background-colo=
+r: #ffffff; border-color: #e8e5ef; border-radius: 2px; border-width: 1px; b=
+ox-shadow: 0 2px 0 rgba(0, 0, 150, 0.025), 2px 4px 0 rgba(0, 0, 150, 0.015)=
+; margin: 0 auto; padding: 0; width: 570px;">
+<!-- Body content -->
+<tr=
+>
+<td class=3D"content-cell" style=3D"box-sizing: border-box; font-family=
+: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, =
+sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; posit=
+ion: relative; max-width: 100vw; padding: 32px;">
+<h1 style=3D"box-sizing=
+: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', R=
+oboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',=
+ 'Segoe UI Symbol'; position: relative; color: #212529; font-size: 18px; fo=
+nt-weight: bold; margin-top: 0; text-align: left;">Price Alert for Ethereum=
+</h1>
+<p style=3D"box-sizing: border-box; font-family: -apple-system, Bli=
+nkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple C=
+olor Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; font-=
+size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;"><strong s=
+tyle=3D"box-sizing: border-box; font-family: -apple-system, BlinkMacSystemF=
+ont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji',=
+ 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative;">Ethereum (ETH)</=
+strong> has dropped <strong style=3D"box-sizing: border-box; font-family: -=
+apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, san=
+s-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position=
+: relative;">0.9 %</strong> in the last 24 hours, now priced at <strong sty=
+le=3D"box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFon=
+t, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', '=
+Segoe UI Emoji', 'Segoe UI Symbol'; position: relative;">$2,433.41</strong>=
+ on Binance.</p>
+<p style=3D"box-sizing: border-box; font-family: -apple-=
+system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-seri=
+f, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: rela=
+tive; font-size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;=
+">Internal memo: <strong style=3D"box-sizing: border-box; font-family: -app=
+le-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-s=
+erif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: r=
+elative;">test</strong></p>
+<table class=3D"action" align=3D"center" widt=
+h=3D"100%" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentation" style=
+=3D"box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont,=
+ 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Se=
+goe UI Emoji', 'Segoe UI Symbol'; position: relative; -premailer-cellpaddin=
+g: 0; -premailer-cellspacing: 0; -premailer-width: 100%; margin: 30px auto;=
+ padding: 0; text-align: center; width: 100%;">
+<tr>
+<td align=3D"cente=
+r" style=3D"box-sizing: border-box; font-family: -apple-system, BlinkMacSys=
+temFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emo=
+ji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative;">
+<table wi=
+dth=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"prese=
+ntation" style=3D"box-sizing: border-box; font-family: -apple-system, Blink=
+MacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Col=
+or Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative;">
+<tr=
+>
+<td align=3D"center" style=3D"box-sizing: border-box; font-family: -app=
+le-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-s=
+erif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: r=
+elative;">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=
+=3D"presentation" style=3D"box-sizing: border-box; font-family: -apple-syst=
+em, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, '=
+Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative=
+;">
+<tr>
+<td style=3D"box-sizing: border-box; font-family: -apple-syste=
+m, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'A=
+pple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative;=
+">
+<a href=3D"https://cryptoradar.com/buy-ethereum" class=3D"button butto=
+n-primary" target=3D"_blank" rel=3D"noopener" style=3D"box-sizing: border-b=
+ox; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Hel=
+vetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI=
+ Symbol'; position: relative; -webkit-text-size-adjust: none; border-radius=
+: 0px; font-weight: bold; color: #fff; display: inline-block; overflow: hid=
+den; text-decoration: none; font-size: 20px; padding: 5px; background-color=
+: #06ad5e; border-bottom: 8px solid #06ad5e; border-left: 18px solid #06ad5=
+e; border-right: 18px solid #06ad5e; border-top: 8px solid #06ad5e;">Go To =
+Price Comparison</a>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>=
+
+</td>
+</tr>
+</table>
+<p style=3D"box-sizing: border-box; font-fami=
+ly: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial=
+, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; pos=
+ition: relative; font-size: 16px; line-height: 1.5em; margin-top: 0; text-a=
+lign: left;">Regards,<br>The Cryptoradar Team</p>
+
+
+<table class=3D"s=
+ubcopy" width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" role=3D"presenta=
+tion" style=3D"box-sizing: border-box; font-family: -apple-system, BlinkMac=
+SystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color =
+Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; border-top=
+: 1px solid #e8e5ef; margin-top: 25px; padding-top: 25px;">
+<tr>
+<td st=
+yle=3D"box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFo=
+nt, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', =
+'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative;">
+<p style=3D"bo=
+x-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Sego=
+e UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI=
+ Emoji', 'Segoe UI Symbol'; position: relative; line-height: 1.5em; margin-=
+top: 0; text-align: left; font-size: 14px;">You're receiving this mail beca=
+use you set a price alert 30 minutes ago. <a href=3D"https://cryptoradar.co=
+m/price-alerts" style=3D"box-sizing: border-box; font-family: -apple-system=
+, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Ap=
+ple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; =
+color: #06ad5e;">Manage your price alerts</a> or <a href=3D"https://cryptor=
+adar.com/price-alert/disable?user_id=3D23932&amp;signature=3D664dfc9802c7db=
+ad72bcd5de44925bd174e8e1f8da4fa7f78d2e0438def1a659" style=3D"box-sizing: bo=
+rder-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot=
+o, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Se=
+goe UI Symbol'; position: relative; color: #06ad5e;">disable them</a>.</p>=
+
+<p style=3D"box-sizing: border-box; font-family: -apple-system, BlinkMac=
+SystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color =
+Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; line-heigh=
+t: 1.5em; margin-top: 0; text-align: left; font-size: 14px;">You are watchi=
+ng <strong style=3D"box-sizing: border-box; font-family: -apple-system, Bli=
+nkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple C=
+olor Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative;">Ethe=
+reum</strong> on <strong style=3D"box-sizing: border-box; font-family: -app=
+le-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-s=
+erif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: r=
+elative;">Binance</strong>. You will be notified every <strong style=3D"box=
+-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe=
+ UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI =
+Emoji', 'Segoe UI Symbol'; position: relative;">30 minutes</strong> by <str=
+ong style=3D"box-sizing: border-box; font-family: -apple-system, BlinkMacSy=
+stemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Em=
+oji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative;">Email</stro=
+ng>.</p>
+
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</td>=
+
+</tr>
+
+<tr>
+<td style=3D"box-sizing: border-box; font-family: -app=
+le-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-s=
+erif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: r=
+elative;">
+<table class=3D"footer" align=3D"center" width=3D"570" cellpad=
+ding=3D"0" cellspacing=3D"0" role=3D"presentation" style=3D"box-sizing: bor=
+der-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto=
+, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Seg=
+oe UI Symbol'; position: relative; -premailer-cellpadding: 0; -premailer-ce=
+llspacing: 0; -premailer-width: 570px; margin: 0 auto; padding: 0; text-ali=
+gn: center; width: 570px;">
+<tr>
+<td class=3D"content-cell" align=3D"ce=
+nter" style=3D"box-sizing: border-box; font-family: -apple-system, BlinkMac=
+SystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color =
+Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; max-width:=
+ 100vw; padding: 32px;">
+<p style=3D"box-sizing: border-box; font-family:=
+ -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, s=
+ans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; positi=
+on: relative; line-height: 1.5em; margin-top: 0; color: #b0adc5; font-size:=
+ 12px; text-align: center;">Cryptoradar is a trademark of Finradar O=C3=
+=9C<br>
+Finradar O=C3=9C, Narva mnt 5, 10117 Tallinn, Estonia<br>
+=
+=C2=A9 2024 Finradar O=C3=9C</p>
+
+</td>
+</tr>
+</table>
+</td>
+</=
+tr>
+</table>
+</td>
+</tr>
+</table>
+</body>
+</html>
+--blU0r1zG--

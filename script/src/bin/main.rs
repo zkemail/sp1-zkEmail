@@ -1,7 +1,7 @@
-use alloy_sol_types::SolType;
 use clap::Parser;
 use sp1_sdk::{include_elf, ProverClient, SP1Stdin};
 use std::path::PathBuf;
+use zkemail_core::EmailWithRegexVerifierOutput;
 use zkemail_helpers::{generate_email_inputs, generate_email_with_regex_inputs};
 
 /// The ELF (executable and linkable format) file for the Succinct RISC-V zkVM.
@@ -80,24 +80,15 @@ async fn main() {
 
     if args.execute {
         // Execute the program
-        let (output, report) = client.execute(image, &stdin).run().unwrap();
+        let (mut output, report) = client.execute(image, &stdin).run().unwrap();
         println!("Program executed successfully.");
 
-        // // Read the output.
-        // let decoded = PublicValuesStruct::abi_decode(output.as_slice(), true).unwrap();
-        // let PublicValuesStruct { n, a, b } = decoded;
-        // println!("n: {}", n);
-        // println!("a: {}", a);
-        // println!("b: {}", b);
+        let output = output.read::<EmailWithRegexVerifierOutput>();
+        println!("Output: {:?}", output);
 
-        // let (expected_a, expected_b) = fibonacci_lib::fibonacci(n);
-        // assert_eq!(a, expected_a);
-        // assert_eq!(b, expected_b);
-        // println!("Values are correct!");
-
-        // Record the number of cycles executed.
         println!("Number of cycles: {}", report.total_instruction_count());
     } else {
+        // NOTE: Does not work with prover network.
         // Setup the program for proving.
         let (pk, vk) = client.setup(image);
 

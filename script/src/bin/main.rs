@@ -1,6 +1,8 @@
 use clap::Parser;
+use dotenv::dotenv;
 use sp1_sdk::{include_elf, ProverClient, SP1Stdin};
 use std::path::PathBuf;
+use tracing::info;
 use zkemail_core::EmailWithRegexVerifierOutput;
 use zkemail_helpers::{generate_email_inputs, generate_email_with_regex_inputs};
 
@@ -30,6 +32,8 @@ struct Args {
 
 #[tokio::main]
 async fn main() {
+    dotenv().ok();
+
     // Setup the logger.
     sp1_sdk::utils::setup_logger();
 
@@ -81,27 +85,31 @@ async fn main() {
     if args.execute {
         // Execute the program
         let (mut output, report) = client.execute(image, &stdin).run().unwrap();
-        println!("Program executed successfully.");
+        info!("Program executed successfully.");
 
         let output = output.read::<EmailWithRegexVerifierOutput>();
-        println!("Output: {:?}", output);
+        info!("Output: {:?}", output);
 
-        println!("Number of cycles: {}", report.total_instruction_count());
+        info!("Number of cycles: {}", report.total_instruction_count());
     } else {
         // NOTE: Does not work with prover network.
         // Setup the program for proving.
         let (pk, vk) = client.setup(image);
 
         // Generate the proof
+        let start = std::time::Instant::now();
         let proof = client
             .prove(&pk, &stdin)
+            .groth16()
             .run()
             .expect("failed to generate proof");
+        let duration = start.elapsed().as_secs_f64();
 
-        println!("Successfully generated proof!");
+        info!("Successfully generated proof in {:.2}s!", duration);
+        info!("Proof: {:?}", proof);
 
         // Verify the proof.
         client.verify(&proof, &vk).expect("failed to verify proof");
-        println!("Successfully verified proof!");
+        info!("Successfully verified proof!");
     }
 }

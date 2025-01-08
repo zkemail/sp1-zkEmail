@@ -13,6 +13,7 @@ name = "evm"
 path = "src/bin/evm.rs"
 
 [dependencies]
+dotenv = { workspace = true }
 sp1-sdk = { workspace = true }
 serde_json = { workspace = true }
 serde = { workspace = true }
@@ -21,7 +22,7 @@ tokio = { workspace = true }
 tracing = { workspace = true }
 hex = { workspace = true }
 zkemail-core = { workspace = true, features = ["sp1"] }
-zkemail-helpers = { workspace = true, features = ["sp1"] }
+zkemail-helpers = { workspace = true }
 
 [build-dependencies]
 sp1-helper = { workspace = true }

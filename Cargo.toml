@@ -7,17 +7,18 @@ resolver = "2"
 
 [workspace.dependencies]
 clap = { version = "4.0", features = ["derive", "env"] }
+dotenv = "0.15.0"
 hex = "0.4.3"
 serde = { version = "1.0.200", default-features = false, features = ["derive"] }
 serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
-sp1-helper = { git = "https://github.com/succinctlabs/sp1", branch = "dev" }
-sp1-sdk = { git = "https://github.com/succinctlabs/sp1", branch = "dev" }
-sp1-zkvm = { git = "https://github.com/succinctlabs/sp1", branch = "dev" }
+sp1-helper = "4.0.0-rc.8"
+sp1-sdk = "4.0.0-rc.8"
+sp1-zkvm = "4.0.0-rc.8"
 tokio = "1.41.1"
 tracing = "0.1.40"
 zkemail-core = { git = "https://github.com/zkemail/zkemail.rs", branch = "feat/core-impl" }
 zkemail-helpers = { git = "https://github.com/zkemail/zkemail.rs", branch = "feat/core-impl" }
 
 [patch.crates-io]
-sha2 = { git = "https://github.com/sp1-patches/RustCrypto-hashes", tag = "sha2-v0.10.8-patch-v1" }
-rsa = { git = "https://github.com/sp1-patches/RustCrypto-RSA", branch = "patch-rsa-v0.9.6" }
+sha2 = { git = "https://github.com/sp1-patches/RustCrypto-hashes", tag = "patch-sha2-0.10.6-sp1-4.0.0-rc.3" }
+rsa = { git = "https://github.com/sp1-patches/RustCrypto-RSA/", tag = "patch-0.9.6-sp1-4.0.0-rc.3" }

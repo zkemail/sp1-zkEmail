@@ -4,7 +4,9 @@ use sp1_sdk::{include_elf, ProverClient, SP1Stdin};
 use std::path::PathBuf;
 use tracing::info;
 use zkemail_core::EmailWithRegexVerifierOutput;
-use zkemail_helpers::{generate_email_inputs, generate_email_with_regex_inputs};
+use zkemail_helpers::{
+    generate_email_inputs, generate_email_with_regex_inputs, read_email_file, read_regex_config,
+};
 
 /// The ELF (executable and linkable format) file for the Succinct RISC-V zkVM.
 pub const EMAIL_VERIFY_ELF: &[u8] = include_elf!("email_verify");
@@ -70,13 +72,15 @@ async fn main() {
 
     // Generate appropriate input
     if let Some(regex_config) = args.regex_config {
-        let input =
-            generate_email_with_regex_inputs(&args.from_domain, &args.email_path, &regex_config)
-                .await
-                .expect("Failed to generate email with regex inputs");
+        let raw_email = read_email_file(&args.email_path).expect("Failed to read email file");
+        let regex_info = read_regex_config(&regex_config).expect("Failed to read regex config");
+        let input = generate_email_with_regex_inputs(&args.from_domain, &raw_email, &regex_info)
+            .await
+            .expect("Failed to generate email with regex inputs");
         stdin.write(&input);
     } else {
-        let input = generate_email_inputs(&args.from_domain, &args.email_path)
+        let raw_email = read_email_file(&args.email_path).expect("Failed to read email file");
+        let input = generate_email_inputs(&args.from_domain, &raw_email)
             .await
             .expect("Failed to generate email inputs");
         stdin.write(&input);

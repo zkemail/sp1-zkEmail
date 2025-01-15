@@ -15,7 +15,6 @@ pub async fn generate_proof(
         "Generating proof for email from domain: {}",
         payload.from_domain
     );
-    sp1_sdk::utils::setup_logger();
 
     // Initialize prover
     let client = ProverClient::from_env();
@@ -23,8 +22,12 @@ pub async fn generate_proof(
     // Prepare stdin
     let mut stdin = SP1Stdin::new();
 
-    let regex_config = RegexConfig::try_from(DecomposedRegexVec(payload.regex_info))
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+    let regex_config =
+        RegexConfig::try_from(DecomposedRegexVec(payload.regex_info)).map_err(|err| {
+            tracing::error!("Error parsing regex config: {:?}", err);
+            StatusCode::INTERNAL_SERVER_ERROR
+        })?;
+    tracing::info!("Regex config parsed: {:?}", regex_config);
 
     let input = generate_email_with_regex_inputs(
         &payload.from_domain,
@@ -32,23 +35,32 @@ pub async fn generate_proof(
         &regex_config,
     )
     .await
-    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+    .map_err(|err| {
+        tracing::error!("Error generating email with regex inputs: {:?}", err);
+        StatusCode::INTERNAL_SERVER_ERROR
+    })?;
 
     stdin.write(&input);
+    tracing::info!("Input written to stdin");
 
-    let pk = get_proving_key()?;
+    let pk = get_proving_key().map_err(|err| {
+        tracing::error!("Error getting proving key: {:?}", err);
+        StatusCode::INTERNAL_SERVER_ERROR
+    })?;
 
     // Generate proof
-    let proof = client
-        .prove(&pk, &stdin)
-        .groth16()
-        .run()
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+    let proof = client.prove(&pk, &stdin).run().map_err(|err| {
+        tracing::error!("Error generating proof: {:?}", err);
+        StatusCode::INTERNAL_SERVER_ERROR
+    })?;
+    tracing::info!("Proof generated");
 
     // Verify proof
-    client
-        .verify(&proof, &pk.vk)
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+    client.verify(&proof, &pk.vk).map_err(|err| {
+        tracing::error!("Error verifying proof: {:?}", err);
+        StatusCode::INTERNAL_SERVER_ERROR
+    })?;
+    tracing::info!("Proof verified");
 
     Ok(Json(proof))
 }

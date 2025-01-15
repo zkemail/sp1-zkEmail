@@ -63,7 +63,16 @@ impl TryFrom<DecomposedRegexVec> for RegexConfig {
 }
 
 pub fn get_proving_key() -> Result<SP1ProvingKey, StatusCode> {
-    let key_bytes = std::fs::read("/usr/local/bin/proving_key.bin")
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
-    bincode::deserialize(&key_bytes).map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)
+    let key_path = std::env::var("PROVING_KEY_PATH")
+        .unwrap_or_else(|_| "/app/data/email_with_regex.bin".to_string());
+
+    let key_bytes = std::fs::read(key_path).map_err(|err| {
+        tracing::error!("Error reading proving key: {:?}", err);
+        StatusCode::INTERNAL_SERVER_ERROR
+    })?;
+
+    bincode::deserialize(&key_bytes).map_err(|err| {
+        tracing::error!("Error deserializing proving key: {:?}", err);
+        StatusCode::INTERNAL_SERVER_ERROR
+    })
 }

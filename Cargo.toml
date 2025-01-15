@@ -22,8 +22,8 @@ tokio = "1.41.1"
 tower-http = "0.6.2"
 tracing = "0.1.40"
 tracing-subscriber = "0.3.19"
-zkemail-core = { git = "https://github.com/zkemail/zkemail.rs", branch = "feat/core-impl" }
-zkemail-helpers = { git = "https://github.com/zkemail/zkemail.rs", branch = "feat/core-impl" }
+zkemail-core = { git = "https://github.com/zkemail/zkemail.rs" }
+zkemail-helpers = { git = "https://github.com/zkemail/zkemail.rs" }
 
 [patch.crates-io]
 sha2 = { git = "https://github.com/sp1-patches/RustCrypto-hashes", tag = "patch-sha2-0.10.6-sp1-4.0.0-rc.3" }

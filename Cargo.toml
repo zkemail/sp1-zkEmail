@@ -17,6 +17,7 @@ serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
 sp1-helper = "4.0.0-rc.8"
 sp1-sdk = "4.0.0-rc.8"
 sp1-zkvm = "4.0.0-rc.8"
+thiserror = "2.0.11"
 tokio = "1.41.1"
 tower-http = "0.6.2"
 tracing = "0.1.40"

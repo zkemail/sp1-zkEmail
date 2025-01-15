@@ -8,15 +8,14 @@ mod utils;
 
 #[tokio::main]
 async fn main() {
-    // Initialize logging
-    tracing_subscriber::fmt::init();
+    sp1_sdk::utils::setup_logger();
 
     // Build our application with a route
     let app = Router::new().route("/generate-proof", post(handlers::generate_proof));
 
     // Get port from environment variable or use default
     let port = std::env::var("PORT")
-        .unwrap_or_else(|_| "8080".to_string())
+        .unwrap_or_else(|_| "8081".to_string())
         .parse()
         .unwrap();
 

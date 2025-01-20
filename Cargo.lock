@@ -4078,7 +4078,7 @@ dependencies = [
 [[package]]
 name = "rsa"
 version = "0.9.6"
-source = "git+https://github.com/sp1-patches/RustCrypto-RSA/?tag=patch-0.9.6-sp1-4.0.0-rc.3#5dc15bb011b64d7b0062850bf61a675a12a41064"
+source = "git+https://github.com/sp1-patches/RustCrypto-RSA/?tag=patch-0.9.6-sp1-4.0.0#da9913ce6a3f5f001dc6e32c9aac07336bf8b7f7"
 dependencies = [
  "bytemuck",
  "cfg-if",
@@ -6496,4 +6496,4 @@ dependencies = [
 [[patch.unused]]
 name = "sha2"
 version = "0.10.6"
-source = "git+https://github.com/sp1-patches/RustCrypto-hashes?tag=patch-sha2-0.10.6-sp1-4.0.0-rc.3#e5f8b7eaaa9801503bd998932a52b65848eee234"
+source = "git+https://github.com/sp1-patches/RustCrypto-hashes?tag=patch-sha2-0.10.6-sp1-4.0.0#e5f8b7eaaa9801503bd998932a52b65848eee234"

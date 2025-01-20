@@ -23,5 +23,5 @@ zkemail-core = { git = "https://github.com/zkemail/zkemail.rs" }
 zkemail-helpers = { git = "https://github.com/zkemail/zkemail.rs" }
 
 [patch.crates-io]
-sha2 = { git = "https://github.com/sp1-patches/RustCrypto-hashes", tag = "patch-sha2-0.10.6-sp1-4.0.0-rc.3" }
-rsa = { git = "https://github.com/sp1-patches/RustCrypto-RSA/", tag = "patch-0.9.6-sp1-4.0.0-rc.3" }
+sha2 = { git = "https://github.com/sp1-patches/RustCrypto-hashes", tag = "patch-sha2-0.10.6-sp1-4.0.0" }
+rsa = { git = "https://github.com/sp1-patches/RustCrypto-RSA/", tag = "patch-0.9.6-sp1-4.0.0" }

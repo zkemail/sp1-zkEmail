@@ -80,7 +80,8 @@ async fn main() {
             .expect("Failed to generate email with regex inputs");
         stdin.write(&input);
     } else {
-        let input = generate_email_inputs(&args.from_domain, &args.email_path)
+        let raw_email = read_email_file(&args.email_path).expect("Failed to read email file");
+        let input = generate_email_inputs(&args.from_domain, &raw_email)
             .await
             .expect("Failed to generate email inputs");
         stdin.write(&input);

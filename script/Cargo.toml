@@ -13,6 +13,7 @@ name = "evm"
 path = "src/bin/evm.rs"
 
 [dependencies]
+alloy-sol-types = { workspace = true }
 dotenv = { workspace = true }
 sp1-sdk = { workspace = true }
 serde_json = { workspace = true }

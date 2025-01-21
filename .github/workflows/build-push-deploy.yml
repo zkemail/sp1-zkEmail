@@ -38,7 +38,7 @@ jobs:
       # Build and Push Docker Image
       - name: Build and Push Docker Image
         run: |
-          IMAGE="us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/sp1-prover/sp1-prover:${{ env.sha }}"
+          IMAGE="us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/sp1-zkEmail/sp1-zkEmail:${{ env.sha }}"
           echo "Building image: $IMAGE"
           docker build -t $IMAGE .
           docker push $IMAGE
@@ -46,9 +46,9 @@ jobs:
       # Deploy to Cloud Run
       - name: Deploy to Cloud Run
         run: |
-          IMAGE="us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/sp1-prover/sp1-prover:${{ env.sha }}"
+          IMAGE="us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/sp1-zkEmail/sp1-zkEmail:${{ env.sha }}"
           echo "Deploying image: $IMAGE to Cloud Run"
-          gcloud run deploy sp1-prover-service \
+          gcloud run deploy sp1-zkEmail-service \
             --image $IMAGE \
             --region us-east1 \
             --platform managed \

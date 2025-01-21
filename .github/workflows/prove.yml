@@ -28,7 +28,7 @@ jobs:
         uses: google-github-actions/auth@v1
         with:
           workload_identity_provider: 'projects/${{ secrets.GCP_PROJECT_NUMBER }}/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
-          service_account: 'github-actions-sa@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com'
+          service_account: 'github-actions-sp1-zkEamil@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com'
 
       # Configure Docker to use Google Artifact Registry
       - name: Configure Docker
@@ -47,6 +47,7 @@ jobs:
       - name: Deploy to Cloud Run
         run: |
           IMAGE="us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/sp1-prover/sp1-prover:${{ env.sha }}"
+          echo "Deploying image: $IMAGE to Cloud Run"
           gcloud run deploy sp1-prover-service \
             --image $IMAGE \
             --region us-east1 \

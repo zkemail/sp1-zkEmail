@@ -28,7 +28,7 @@ jobs:
         uses: google-github-actions/auth@v1
         with:
           workload_identity_provider: 'projects/${{ secrets.GCP_PROJECT_NUMBER }}/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
-          service_account: 'github-actions-sp1-zkEmail@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com'
+          service_account: 'github-actions-sp1-zkemail@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com'
 
       # Configure Docker to use Google Artifact Registry
       - name: Configure Docker
@@ -38,7 +38,7 @@ jobs:
       # Build and Push Docker Image
       - name: Build and Push Docker Image
         run: |
-          IMAGE="us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/sp1-zkEmail/sp1-zkEmail:${{ env.sha }}"
+          IMAGE="us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/sp1-zkemail/sp1-zkemail:${{ env.sha }}"
           echo "Building image: $IMAGE"
           docker build -t $IMAGE .
           docker push $IMAGE
@@ -46,12 +46,12 @@ jobs:
       # Deploy to Cloud Run
       - name: Deploy to Cloud Run
         run: |
-          IMAGE="us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/sp1-zkEmail/sp1-zkEmail:${{ env.sha }}"
+          IMAGE="us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/sp1-zkemail/sp1-zkemail:${{ env.sha }}"
           echo "Deploying image: $IMAGE to Cloud Run"
-          gcloud run deploy sp1-zkEmail-service \
+          gcloud run deploy sp1-zkemail-service \
             --image $IMAGE \
             --region us-east1 \
             --platform managed \
             --allow-unauthenticated \
             --memory 4Gi \
-            --update-secrets "NETWORK_PRIVATE_KEY=NETWORK_PRIVATE_KEY:latest,NETWORK_RPC_URL=NETWORK_RPC_URL:latest,ZKEMAIL_API_KEY=ZKEMAIL_API_KEY:latest"
+            --update-secrets "NETWORK_PRIVATE_KEY=NETWORK_PRIVATE_KEY:latest,NETWORK_RPC_URL=NETWORK_RPC_URL:latest,zkemail_API_KEY=zkemail_API_KEY:latest"

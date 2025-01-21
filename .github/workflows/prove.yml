@@ -21,7 +21,8 @@ jobs:
       # Get the short SHA for tagging
       - name: Get Short SHA
         id: sha
-        run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        run: |
+          echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       # Authenticate with Google Cloud using Workload Identity Federation
       - name: Authenticate to Google Cloud
@@ -37,19 +38,23 @@ jobs:
 
       # Build and Push Docker Image
       - name: Build and Push Docker Image
+        env:
+          SHA: ${{ steps.sha.outputs.sha }}
         run: |
-          IMAGE="us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/sp1-prover/sp1-prover:${{ steps.sha.outputs.sha }}"
+          IMAGE="us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/sp1-prover/sp1-prover:${SHA}"
+          echo "Building image: $IMAGE"
           docker build -t $IMAGE .
           docker push $IMAGE
 
       # Deploy to Cloud Run
       - name: Deploy to Cloud Run
+        env:
+          SHA: ${{ steps.sha.outputs.sha }}
         run: |
-          gcloud run deploy ${_SERVICE_NAME} \
-            --image ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/${_SERVICE_NAME}:${COMMIT_SHA} \
-            --region ${_REGION} \
+          gcloud run deploy sp1-prover-service \
+            --image "us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/sp1-prover/sp1-prover:${SHA}" \
+            --region us-east1 \
             --platform managed \
             --allow-unauthenticated \
             --memory 4Gi \
-            --update-secrets "NETWORK_PRIVATE_KEY=NETWORK_PRIVATE_KEY:latest,NETWORK_RPC_URL=NETWORK_RPC_URL:latest,ZKEMAIL_API_KEY=ZKEMAIL_API_KEY:latest" \
-            --memory 4Gi
+            --update-secrets "NETWORK_PRIVATE_KEY=NETWORK_PRIVATE_KEY:latest,NETWORK_RPC_URL=NETWORK_RPC_URL:latest,ZKEMAIL_API_KEY=ZKEMAIL_API_KEY:latest"

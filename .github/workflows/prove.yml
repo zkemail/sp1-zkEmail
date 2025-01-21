@@ -21,8 +21,7 @@ jobs:
       # Get the short SHA for tagging
       - name: Get Short SHA
         id: sha
-        run: |
-          echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
       # Authenticate with Google Cloud using Workload Identity Federation
       - name: Authenticate to Google Cloud
@@ -38,21 +37,18 @@ jobs:
 
       # Build and Push Docker Image
       - name: Build and Push Docker Image
-        env:
-          SHA: ${{ steps.sha.outputs.sha }}
         run: |
-          IMAGE="us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/sp1-prover/sp1-prover:${SHA}"
+          IMAGE="us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/sp1-prover/sp1-prover:${{ env.sha }}"
           echo "Building image: $IMAGE"
           docker build -t $IMAGE .
           docker push $IMAGE
 
       # Deploy to Cloud Run
       - name: Deploy to Cloud Run
-        env:
-          SHA: ${{ steps.sha.outputs.sha }}
         run: |
+          IMAGE="us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/sp1-prover/sp1-prover:${{ env.sha }}"
           gcloud run deploy sp1-prover-service \
-            --image "us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/sp1-prover/sp1-prover:${SHA}" \
+            --image $IMAGE \
             --region us-east1 \
             --platform managed \
             --allow-unauthenticated \

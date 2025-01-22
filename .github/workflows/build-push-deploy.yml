@@ -28,7 +28,7 @@ jobs:
         uses: google-github-actions/auth@v1
         with:
           workload_identity_provider: 'projects/${{ secrets.GCP_PROJECT_NUMBER }}/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
-          service_account: 'github-actions-sp1-zkeamil@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com'
+          service_account: 'github-actions-sp1-zkemail@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com'
 
       # Configure Docker to use Google Artifact Registry
       - name: Configure Docker

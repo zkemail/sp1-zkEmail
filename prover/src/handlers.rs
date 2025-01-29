@@ -49,18 +49,19 @@ pub async fn generate_proof(
     })?;
 
     // Generate proof
-    let proof = client.prove(&pk, &stdin).run().map_err(|err| {
+    let proof = client.prove(&pk, &stdin).groth16().run().map_err(|err| {
         tracing::error!("Error generating proof: {:?}", err);
         StatusCode::INTERNAL_SERVER_ERROR
     })?;
     tracing::info!("Proof generated");
 
+    // Skipping verification, since it runs a seperate docker container which we cannot do on google cloud run
     // Verify proof
-    client.verify(&proof, &pk.vk).map_err(|err| {
-        tracing::error!("Error verifying proof: {:?}", err);
-        StatusCode::INTERNAL_SERVER_ERROR
-    })?;
-    tracing::info!("Proof verified");
+    // client.verify(&proof, &pk.vk).map_err(|err| {
+    //     tracing::error!("Error verifying proof: {:?}", err);
+    //     StatusCode::INTERNAL_SERVER_ERROR
+    // })?;
+    // tracing::info!("Proof verified");
 
     Ok(Json(proof))
 }

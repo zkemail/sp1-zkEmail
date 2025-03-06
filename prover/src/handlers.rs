@@ -33,6 +33,7 @@ pub async fn generate_proof(
         &payload.from_domain,
         payload.raw_email.as_bytes(),
         &regex_config,
+        Some(payload.external_inputs),
     )
     .await
     .map_err(|err| {

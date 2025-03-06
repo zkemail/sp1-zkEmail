@@ -14,50 +14,30 @@ impl TryFrom<DecomposedRegexVec> for RegexConfig {
         let mut body_parts = Vec::new();
 
         for regex in regexes {
-            // Find if there's any public part and its index
-            let public_idx = regex.parts.iter().position(|part| part.is_public);
-
-            let pattern = if let Some(idx) = public_idx {
-                // Has a public part - create Capture
-                let prefix = regex.parts[..idx]
-                    .iter()
-                    .map(|p| p.regex_def.clone())
-                    .collect::<String>();
-
-                let capture = regex.parts[idx].regex_def.clone();
-
-                let suffix = regex.parts[idx + 1..]
-                    .iter()
-                    .map(|p| p.regex_def.clone())
-                    .collect::<String>();
-
-                RegexPattern::Capture {
-                    prefix,
-                    capture,
-                    suffix,
+            let mut pattern = String::new();
+            let mut capture_indices = Vec::new();
+            for (idx, part) in regex.parts.iter().enumerate() {
+                if part.is_public {
+                    pattern.push_str(&format!("({})", part.regex_def));
+                    capture_indices.push(idx + 1);
+                } else {
+                    pattern.push_str(&part.regex_def);
                 }
-            } else {
-                // No public parts - concatenate all for Match
-                let pattern = regex
-                    .parts
-                    .iter()
-                    .map(|p| p.regex_def.clone())
-                    .collect::<String>();
-
-                RegexPattern::Match { pattern }
+            }
+            let regex_pattern = RegexPattern {
+                pattern,
+                capture_indices: Some(capture_indices),
             };
-
-            // Add to appropriate vector based on location
             match regex.location.as_str() {
-                "header" => header_parts.push(pattern),
-                "body" => body_parts.push(pattern),
+                "header" => header_parts.push(regex_pattern),
+                "body" => body_parts.push(regex_pattern),
                 _ => return Err("Invalid regex location"),
             }
         }
 
         Ok(RegexConfig {
-            header_parts,
-            body_parts,
+            header_parts: Some(header_parts),
+            body_parts: Some(body_parts),
         })
     }
 }

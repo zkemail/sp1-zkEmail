@@ -1,9 +1,10 @@
 use axum::http::StatusCode;
-use sp1_sdk::SP1ProvingKey;
+use serde_json::json;
 use zkemail_helpers::{RegexConfig, RegexPattern};
 
 use crate::types::DecomposedRegex;
 
+#[derive(Clone)]
 pub struct DecomposedRegexVec(pub Vec<DecomposedRegex>);
 
 impl TryFrom<DecomposedRegexVec> for RegexConfig {
@@ -14,65 +15,74 @@ impl TryFrom<DecomposedRegexVec> for RegexConfig {
         let mut body_parts = Vec::new();
 
         for regex in regexes {
-            // Find if there's any public part and its index
-            let public_idx = regex.parts.iter().position(|part| part.is_public);
-
-            let pattern = if let Some(idx) = public_idx {
-                // Has a public part - create Capture
-                let prefix = regex.parts[..idx]
-                    .iter()
-                    .map(|p| p.regex_def.clone())
-                    .collect::<String>();
-
-                let capture = regex.parts[idx].regex_def.clone();
-
-                let suffix = regex.parts[idx + 1..]
-                    .iter()
-                    .map(|p| p.regex_def.clone())
-                    .collect::<String>();
-
-                RegexPattern::Capture {
-                    prefix,
-                    capture,
-                    suffix,
+            let mut pattern = String::new();
+            let mut capture_indices = Vec::new();
+            let mut capture_index = 1;
+            for part in regex.parts.iter() {
+                if part.is_public {
+                    pattern.push_str(&format!("({})", part.regex_def));
+                    capture_indices.push(capture_index);
+                    capture_index += 1;
+                } else {
+                    pattern.push_str(&part.regex_def);
                 }
-            } else {
-                // No public parts - concatenate all for Match
-                let pattern = regex
-                    .parts
-                    .iter()
-                    .map(|p| p.regex_def.clone())
-                    .collect::<String>();
+            }
 
-                RegexPattern::Match { pattern }
+            let capture_indices = if !capture_indices.is_empty() {
+                Some(capture_indices)
+            } else {
+                None
             };
 
-            // Add to appropriate vector based on location
+            let regex_pattern = RegexPattern {
+                pattern,
+                capture_indices,
+            };
+
             match regex.location.as_str() {
-                "header" => header_parts.push(pattern),
-                "body" => body_parts.push(pattern),
+                "header" => header_parts.push(regex_pattern),
+                "body" => body_parts.push(regex_pattern),
                 _ => return Err("Invalid regex location"),
             }
         }
 
         Ok(RegexConfig {
-            header_parts,
-            body_parts,
+            header_parts: Some(header_parts),
+            body_parts: Some(body_parts),
         })
     }
 }
 
-pub fn get_proving_key() -> Result<SP1ProvingKey, StatusCode> {
-    let key_path = std::env::var("PROVING_KEY_PATH")
-        .unwrap_or_else(|_| "/app/data/email_with_regex.bin".to_string());
+impl DecomposedRegexVec {
+    pub fn match_sp1_proof_outpus(
+        self,
+        mut matches: Vec<String>,
+    ) -> Result<serde_json::Value, StatusCode> {
+        let mut result = json!({});
 
-    let key_bytes = std::fs::read(key_path).map_err(|err| {
-        tracing::error!("Error reading proving key: {:?}", err);
-        StatusCode::INTERNAL_SERVER_ERROR
-    })?;
+        for decomposed_regex in self.0.into_iter() {
+            // Count public parts in decompose regex
+            let public_parts_count = decomposed_regex
+                .parts
+                .iter()
+                .filter(|part| part.is_public)
+                .count();
 
-    bincode::deserialize(&key_bytes).map_err(|err| {
-        tracing::error!("Error deserializing proving key: {:?}", err);
-        StatusCode::INTERNAL_SERVER_ERROR
-    })
+            // Remove and save public_parts_count elements from matches
+            let mut removed_matches = Vec::with_capacity(public_parts_count);
+            for _ in 0..public_parts_count {
+                if let Some(value) = matches.first() {
+                    removed_matches.push(value.clone());
+                    matches.remove(0);
+                } else {
+                    return Err(StatusCode::INTERNAL_SERVER_ERROR);
+                }
+            }
+
+            // Save matches as key value pair
+            result[decomposed_regex.name] = json!(removed_matches);
+        }
+
+        Ok(result)
+    }
 }

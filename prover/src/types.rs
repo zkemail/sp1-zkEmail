@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use zkemail_core::ExternalInput;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct DecomposedRegexPart {
@@ -19,4 +20,5 @@ pub struct ProverInput {
     pub from_domain: String,
     pub raw_email: String,
     pub regex_info: Vec<DecomposedRegex>,
+    pub external_inputs: Option<Vec<ExternalInput>>,
 }

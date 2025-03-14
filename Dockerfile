@@ -11,7 +11,7 @@ RUN rustup component add llvm-tools rustc-dev && \
 WORKDIR /usr/src/app
 
 # Download proving key
-RUN curl -L "https://storage.googleapis.com/zk-vm/sp1/email_with_regex.bin" -o /usr/local/bin/proving_key.bin
+RUN curl -L "https://storage.googleapis.com/zk-vm/sp1/email_with_regex_verify" -o /usr/local/bin/email_with_regex_verify
 
 # Copy entire workspace for dependencies
 COPY . .
@@ -28,14 +28,14 @@ RUN apt-get update && apt-get install -y libssl3 ca-certificates && \
     update-ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
-ENV PROVING_KEY_PATH=/usr/local/bin/proving_key.bin
+ENV EMAIL_WITH_REGEX_VERIFY_PATH=/usr/local/bin/email_with_regex_verify
 ENV SP1_PROVER=network
 
 WORKDIR /app
 
 # Copy the binary and proving key from the builder stage
 COPY --from=builder /usr/src/app/target/x86_64-unknown-linux-gnu/release/prover .
-COPY --from=builder /usr/local/bin/proving_key.bin ${PROVING_KEY_PATH}
+COPY --from=builder /usr/local/bin/email_with_regex_verify ${EMAIL_WITH_REGEX_VERIFY_PATH}
 
 # Expose the application port
 EXPOSE 8081

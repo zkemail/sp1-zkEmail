@@ -3,7 +3,7 @@ name: Build, Push, and Deploy to Cloud Run
 on:
   push:
     branches:
-      - main
+      - staging
 
 permissions:
   id-token: write

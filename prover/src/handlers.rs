@@ -70,6 +70,7 @@ pub async fn generate_proof(
         StatusCode::INTERNAL_SERVER_ERROR
     })?;
 
+
     let (email, matches) = match output {
         VerificationOutput::WithRegex { email, matches } => Ok((email, matches)),
         VerificationOutput::EmailOnly(_) => {

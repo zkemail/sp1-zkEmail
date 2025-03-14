@@ -20,5 +20,5 @@ pub struct ProverInput {
     pub from_domain: String,
     pub raw_email: String,
     pub regex_info: Vec<DecomposedRegex>,
-    pub external_inputs: Vec<ExternalInput>,
+    pub external_inputs: Option<Vec<ExternalInput>>,
 }

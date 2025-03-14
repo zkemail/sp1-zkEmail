@@ -3847,6 +3847,7 @@ version = "0.1.0"
 dependencies = [
  "axum 0.8.1",
  "bincode",
+ "hex",
  "serde",
  "serde_json",
  "sp1-sdk",
@@ -6580,6 +6581,7 @@ dependencies = [
 [[package]]
 name = "zkemail-core"
 version = "0.1.0"
+source = "git+https://github.com/zkemail/zkemail.rs#b77fa7253df9a33968cf1c0ba144da80b3487572"
 dependencies = [
  "alloy-sol-types",
  "borsh",
@@ -6595,6 +6597,7 @@ dependencies = [
 [[package]]
 name = "zkemail-helpers"
 version = "0.1.0"
+source = "git+https://github.com/zkemail/zkemail.rs#b77fa7253df9a33968cf1c0ba144da80b3487572"
 dependencies = [
  "alloy-sol-types",
  "anyhow",

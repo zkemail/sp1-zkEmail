@@ -17,3 +17,6 @@ pgo-data.profdata
 
 # Env
 .env
+
+proving_key.bin
+email_with_regex_verify

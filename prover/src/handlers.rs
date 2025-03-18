@@ -2,7 +2,7 @@ use std::time::Duration;
 
 use axum::{http::StatusCode, Json};
 use serde::{Deserialize, Serialize};
-use sp1_sdk::{HashableKey, ProverClient, SP1Stdin};
+use sp1_sdk::{HashableKey, Prover, ProverClient, SP1Stdin};
 use tracing::error;
 use tracing::info;
 use zkemail_core::VerificationOutput;

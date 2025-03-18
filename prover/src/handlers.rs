@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use axum::{http::StatusCode, Json};
 use serde::{Deserialize, Serialize};
 use sp1_sdk::{HashableKey, ProverClient, SP1Stdin};
@@ -16,8 +18,22 @@ pub async fn generate_proof(
         payload.from_domain
     );
 
+    let private_key = std::env::var("NETWORK_PRIVATE_KEY").map_err(|err| {
+        tracing::error!("Error getting NETWORK_PRIVATE_KEY: {:?}", err);
+        StatusCode::INTERNAL_SERVER_ERROR
+    })?;
+
+    let rpc_url = std::env::var("NETWORK_RPC_URL").map_err(|err| {
+        tracing::error!("Error getting NETWORK_RPC_URL: {:?}", err);
+        StatusCode::INTERNAL_SERVER_ERROR
+    })?;
+
     // Initialize prover
-    let client = ProverClient::from_env();
+    let client = ProverClient::builder()
+        .network()
+        .private_key(&private_key)
+        .rpc_url(&rpc_url)
+        .build();
 
     // Prepare stdin
     let mut stdin = SP1Stdin::new();
@@ -59,10 +75,15 @@ pub async fn generate_proof(
     let (pk, _) = client.setup(&email_with_regex_elf);
 
     // Generate proof
-    let proof = client.prove(&pk, &stdin).groth16().run().map_err(|err| {
-        tracing::error!("Error generating proof: {:?}", err);
-        StatusCode::INTERNAL_SERVER_ERROR
-    })?;
+    let proof = client
+        .prove(&pk, &stdin)
+        .timeout(Duration::from_secs(80))
+        .groth16()
+        .run()
+        .map_err(|err| {
+            tracing::error!("Error generating proof: {:?}", err);
+            StatusCode::INTERNAL_SERVER_ERROR
+        })?;
     tracing::info!("Proof generated");
 
     let output = VerificationOutput::abi_decode(proof.public_values.as_slice()).map_err(|err| {

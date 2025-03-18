@@ -70,7 +70,6 @@ pub async fn generate_proof(
         StatusCode::INTERNAL_SERVER_ERROR
     })?;
 
-
     let (email, matches) = match output {
         VerificationOutput::WithRegex { email, matches } => Ok((email, matches)),
         VerificationOutput::EmailOnly(_) => {
@@ -83,7 +82,6 @@ pub async fn generate_proof(
 
     let proof_data = ProofData {
         proof: serde_json::json!({"hex": hex::encode(proof.bytes())}),
-        // public_outputs: hex::encode(proof.public_values),
         public_outputs: serde_json::json!({
             "outputs": email,
             "outputs_hex": hex::encode(proof.public_values)

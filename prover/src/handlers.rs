@@ -28,6 +28,7 @@ pub async fn generate_proof(
         StatusCode::INTERNAL_SERVER_ERROR
     })?;
 
+    tracing::info!("Initializing sp1 client");
     // Initialize prover
     let client = ProverClient::builder()
         .network()

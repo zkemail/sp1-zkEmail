@@ -77,7 +77,7 @@ pub async fn generate_proof(
     // Generate proof
     let proof = client
         .prove(&pk, &stdin)
-        .timeout(Duration::from_secs(80))
+        .timeout(Duration::from_secs(600))
         .groth16()
         .run()
         .map_err(|err| {

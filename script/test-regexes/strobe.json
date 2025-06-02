@@ -1,27 +1,18 @@
 {
     "header_parts": [
         {
-            "Capture": {
-                "prefix": "(?:\r\n|^)Subject: (?:=\\?utf-8\\?Q\\?[^?]*\\?=)?\\s*",
-                "capture": "[A-Z]{2,5}",
-                "suffix": " is"
-            }
+            "pattern": "(?:\r\n|^)subject:(?:=\\?utf-8\\?Q\\?[^?]*\\?=)?\\s*([A-Z]{2,5}) is",
+            "capture_indices": [1]
         },
         {
-            "Capture": {
-                "prefix": "(?:\r\n|^)DKIM-Signature: v=1;[^;]*;[^;]*;[^;]*;[^;]*;[^;]*; t=",
-                "capture": "[0-9]+",
-                "suffix": ";"
-            }
+            "pattern": "(?:\r\n|^)dkim-signature:v=1;[^;]*;[^;]*;[^;]*;[^;]*;[^;]*; t=([0-9]+);",
+            "capture_indices": [1]
         }
     ],
     "body_parts": [
         {
-            "Capture": {
-                "prefix": ">[\\$]",
-                "capture": "[0-9,.]+",
-                "suffix": ""
-            }
+            "pattern": ">[\\$]([0-9,.]+)",
+            "capture_indices": [1]
         }
     ]
 }

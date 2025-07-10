@@ -1255,7 +1255,7 @@ dependencies = [
 [[package]]
 name = "cfdkim"
 version = "0.3.3"
-source = "git+https://github.com/zkemail/cfdkim.git#75af99fb4d34c7fe0a0cf2410b22793e2451fb5f"
+source = "git+https://github.com/zkemail/cfdkim.git#861f5e053711fdecbe70d68c6b51b48b55d21926"
 dependencies = [
  "base64 0.21.7",
  "chrono",
@@ -7046,7 +7046,7 @@ dependencies = [
 [[package]]
 name = "zkemail-core"
 version = "0.1.0"
-source = "git+https://github.com/zkemail/zkemail.rs#65ccbcea29a03e188ef9f736f15daec195f7adea"
+source = "git+https://github.com/zkemail/zkemail.rs#82355730020a2d428e221f9ce0edac59ea27d766"
 dependencies = [
  "alloy-sol-types 0.8.25",
  "borsh",
@@ -7062,7 +7062,7 @@ dependencies = [
 [[package]]
 name = "zkemail-helpers"
 version = "0.1.0"
-source = "git+https://github.com/zkemail/zkemail.rs#65ccbcea29a03e188ef9f736f15daec195f7adea"
+source = "git+https://github.com/zkemail/zkemail.rs#82355730020a2d428e221f9ce0edac59ea27d766"
 dependencies = [
  "alloy-sol-types 0.8.25",
  "anyhow",

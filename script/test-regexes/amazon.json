@@ -1,0 +1,13 @@
+{
+    "header_parts": [
+        {
+            "pattern": "(?:\r\n|^)subject:([^\r\n]+)(\r\n)",
+            "capture_indices": [1]
+        },
+        {
+            "pattern": "(?:\r\n|^)dkim-signature:v=1;[^;]*;[^;]*;[^;]*;[^;]*;[^;]*; t=([0-9]+);",
+            "capture_indices": [1]
+        }
+    ],
+    "body_parts": []
+}

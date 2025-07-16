@@ -45,6 +45,7 @@ jobs:
           
       - name: Upload ELF to Google Cloud Storage
         run: |
+          gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
           gsutil cp target/elf-compilation/riscv32im-succinct-zkvm-elf/release/email_with_regex_verify gs://zk-vm/sp1/email_with_regex_verify
 
       # Configure Docker to use Google Artifact Registry

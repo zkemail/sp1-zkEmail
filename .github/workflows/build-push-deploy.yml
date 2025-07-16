@@ -30,6 +30,22 @@ jobs:
           workload_identity_provider: 'projects/${{ secrets.GCP_PROJECT_NUMBER }}/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
           service_account: 'github-actions-sp1-zkemail@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com'
 
+      # Install SP1 toolchain and build ELF
+      - name: Install SP1 toolchain
+        run: |
+          curl -L https://sp1.succinct.xyz | bash
+          source ~/.bashrc
+          ~/.sp1/bin/sp1up
+          
+      - name: Build ELF file
+        run: |
+          cd program
+          ~/.sp1/bin/cargo prove build
+          
+      - name: Upload ELF to Google Cloud Storage
+        run: |
+          gsutil cp target/elf-compilation/riscv32im-succinct-zkvm-elf/release/email_with_regex_verify gs://zk-vm/sp1/email_with_regex_verify
+
       # Configure Docker to use Google Artifact Registry
       - name: Configure Docker
         run: |

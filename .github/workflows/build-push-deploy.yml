@@ -44,9 +44,10 @@ jobs:
           cargo prove build
           
       - name: Upload ELF to Google Cloud Storage
-        run: |
-          gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
-          gsutil cp target/elf-compilation/riscv32im-succinct-zkvm-elf/release/email_with_regex_verify gs://zk-vm/sp1/email_with_regex_verify
+        uses: google-github-actions/upload-cloud-storage@v2
+        with:
+          path: target/elf-compilation/riscv32im-succinct-zkvm-elf/release/email_with_regex_verify
+          destination: zk-vm/sp1/email_with_regex_verify
 
       # Configure Docker to use Google Artifact Registry
       - name: Configure Docker

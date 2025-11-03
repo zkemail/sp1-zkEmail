@@ -37,6 +37,7 @@ impl TryFrom<DecomposedRegexVec> for RegexConfig {
             let regex_pattern = RegexPattern {
                 pattern,
                 capture_indices,
+                max_length: Some(regex.max_length),
             };
 
             match regex.location.as_str() {

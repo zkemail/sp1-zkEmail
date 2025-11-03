@@ -2,23 +2,28 @@
     "header_parts": [
         {
             "pattern": "(?:\r\n|^)subject:([^\r\n]+)(\r\n)",
-            "capture_indices": [1]
+            "capture_indices": [1],
+            "max_length": 128
         },
         {
             "pattern": "(?:\r\n|^)dkim-signature:v=1;[^;]*;[^;]*;[^;]*;[^;]*;[^;]*; t=([0-9]+);",
-            "capture_indices": [1]
+            "capture_indices": [1],
+            "max_length": 16
         },
         {
-            "pattern": "(?:\r\n|^)from:(?:([^\r\n]+<)?)([A-Za-z0-9!#$%&'\\*\\+-/=\\?\\^_`{\\|}~\\.]+@[A-Za-z0-9\\.-]+)(>?\r\n)",
-            "capture_indices": [2]
+            "pattern": "(?:\r\n|^)from:(?:[^\r\n]+<)?([A-Za-z0-9!#$%&'\\*\\+-/=\\?\\^_`{\\|}~\\.]+@[A-Za-z0-9\\.-]+)(>?\r\n)",
+            "capture_indices": [1],
+            "max_length": 64
         },
         {
             "pattern": "(?:\r\n|^)to:([^\r\n]+)(\r\n)",
-            "capture_indices": [1]
+            "capture_indices": [1],
+            "max_length": 64
         },
         {
             "pattern": "(?:\r\n|^)date:([^\r\n]+)(\r\n)",
-            "capture_indices": [1]
+            "capture_indices": [1],
+            "max_length": 64
         }
 
     ],

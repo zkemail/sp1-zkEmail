@@ -7046,7 +7046,7 @@ dependencies = [
 [[package]]
 name = "zkemail-core"
 version = "0.1.0"
-source = "git+https://github.com/zkemail/zkemail.rs#82355730020a2d428e221f9ce0edac59ea27d766"
+source = "git+https://github.com/zkemail/zkemail.rs?rev=4e40a0644f100d84a634ced3a27e1ecbf28ff406#4e40a0644f100d84a634ced3a27e1ecbf28ff406"
 dependencies = [
  "alloy-sol-types 0.8.25",
  "borsh",
@@ -7062,7 +7062,7 @@ dependencies = [
 [[package]]
 name = "zkemail-helpers"
 version = "0.1.0"
-source = "git+https://github.com/zkemail/zkemail.rs#82355730020a2d428e221f9ce0edac59ea27d766"
+source = "git+https://github.com/zkemail/zkemail.rs?rev=4e40a0644f100d84a634ced3a27e1ecbf28ff406#4e40a0644f100d84a634ced3a27e1ecbf28ff406"
 dependencies = [
  "alloy-sol-types 0.8.25",
  "anyhow",

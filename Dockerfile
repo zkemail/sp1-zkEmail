@@ -21,7 +21,7 @@ WORKDIR /usr/src/app/prover
 RUN cargo build --release --target x86_64-unknown-linux-gnu
 
 # Use Debian Bookworm base image for the final container
-FROM debian:bookworm-slim
+FROM debian:trixie-slim
 
 # Install OpenSSL 3 and other runtime dependencies
 RUN apt-get update && apt-get install -y libssl3 ca-certificates && \

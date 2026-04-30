@@ -36,17 +36,17 @@ jobs:
           curl -L https://sp1.succinct.xyz | bash
           export PATH="$HOME/.sp1/bin:$PATH"
           sp1up
-          
+
       - name: Build ELF file
         run: |
           export PATH="$HOME/.sp1/bin:$PATH"
           cd program
-          cargo prove build
-          
+          cargo prove build --output-directory ../elf
+
       - name: Upload ELF to Google Cloud Storage
         uses: google-github-actions/upload-cloud-storage@v2
         with:
-          path: target/elf-compilation/riscv32im-succinct-zkvm-elf/release/email_with_regex_verify
+          path: elf/
           destination: zk-vm/sp1/
 
       # Configure Docker to use Google Artifact Registry

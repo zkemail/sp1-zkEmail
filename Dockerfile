@@ -1,5 +1,5 @@
 # Builder stage
-FROM rust:1.81.0 AS builder
+FROM rust:1.91.0 AS builder
 
 RUN rustup target add x86_64-unknown-linux-gnu
 

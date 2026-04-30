@@ -16,7 +16,7 @@ hex = "0.4.3"
 serde = { version = "1.0.200", default-features = false, features = ["derive"] }
 serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
 sp1-helper = "=6.1.0"
-sp1-sdk = "=6.1.0"
+sp1-sdk = { version = "=6.1.0", features = ["network"] }
 sp1-zkvm = "=6.1.0"
 tokio = "1.41.1"
 tower-http = "0.6.2"

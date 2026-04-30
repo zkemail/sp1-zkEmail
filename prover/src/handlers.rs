@@ -2,7 +2,7 @@ use std::time::Duration;
 
 use axum::{http::StatusCode, Json};
 use serde::{Deserialize, Serialize};
-use sp1_sdk::{HashableKey, ProverClient, SP1Stdin};
+use sp1_sdk::{Elf, HashableKey, Prover, ProverClient, ProvingKey, SP1Stdin};
 use tracing::error;
 use tracing::info;
 use zkemail_core::VerificationOutput;
@@ -74,14 +74,17 @@ pub async fn generate_proof(
         StatusCode::INTERNAL_SERVER_ERROR
     })?;
 
-    let (pk, _) = client.setup(&email_with_regex_elf).await;
+    let elf: Elf = email_with_regex_elf.into();
+    let pk = client.setup(elf).await.map_err(|err| {
+        tracing::error!("Error setting up prover: {:?}", err);
+        StatusCode::INTERNAL_SERVER_ERROR
+    })?;
 
     // Generate proof
     let proof = client
-        .prove(&pk, &stdin)
+        .prove(&pk, stdin)
         .timeout(Duration::from_secs(600))
         .groth16()
-        .run()
         .await
         .map_err(|err| {
             tracing::error!("Error generating proof: {:?}", err);
@@ -111,7 +114,7 @@ pub async fn generate_proof(
             "outputs_hex": hex::encode(proof.public_values)
         }),
         parsed_public_outputs,
-        vkey_hash: pk.vk.bytes32(),
+        vkey_hash: pk.verifying_key().bytes32(),
     };
 
     Ok(Json(proof_data))

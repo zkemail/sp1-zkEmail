@@ -2,7 +2,7 @@ use std::time::Duration;
 
 use axum::{http::StatusCode, Json};
 use serde::{Deserialize, Serialize};
-use sp1_sdk::{Elf, HashableKey, Prover, ProverClient, ProvingKey, SP1Stdin};
+use sp1_sdk::{Elf, HashableKey, ProveRequest, Prover, ProverClient, ProvingKey, SP1ProofMode, SP1Stdin};
 use tracing::error;
 use tracing::info;
 use zkemail_core::VerificationOutput;
@@ -84,7 +84,7 @@ pub async fn generate_proof(
     let proof = client
         .prove(&pk, stdin)
         .timeout(Duration::from_secs(600))
-        .groth16()
+        .mode(SP1ProofMode::Groth16)
         .await
         .map_err(|err| {
             tracing::error!("Error generating proof: {:?}", err);

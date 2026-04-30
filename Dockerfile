@@ -1,11 +1,11 @@
 # Builder stage
-FROM rust:1.81.0 AS builder
+FROM rust:1.91.0 AS builder
 
 RUN rustup target add x86_64-unknown-linux-gnu
 
 # Install required tools
 RUN rustup component add llvm-tools rustc-dev && \
-    apt-get update && apt-get install -y ca-certificates curl && \
+    apt-get update && apt-get install -y ca-certificates curl protobuf-compiler && \
     update-ca-certificates
 
 WORKDIR /usr/src/app
@@ -21,7 +21,7 @@ WORKDIR /usr/src/app/prover
 RUN cargo build --release --target x86_64-unknown-linux-gnu
 
 # Use Debian Bookworm base image for the final container
-FROM debian:bookworm-slim
+FROM debian:trixie-slim
 
 # Install OpenSSL 3 and other runtime dependencies
 RUN apt-get update && apt-get install -y libssl3 ca-certificates && \

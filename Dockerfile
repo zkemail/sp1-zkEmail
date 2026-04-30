@@ -5,7 +5,7 @@ RUN rustup target add x86_64-unknown-linux-gnu
 
 # Install required tools
 RUN rustup component add llvm-tools rustc-dev && \
-    apt-get update && apt-get install -y ca-certificates curl && \
+    apt-get update && apt-get install -y ca-certificates curl protobuf-compiler && \
     update-ca-certificates
 
 WORKDIR /usr/src/app

@@ -59,7 +59,7 @@ async fn main() {
     }
 
     // Setup the prover client.
-    let client = ProverClient::from_env();
+    let client = ProverClient::from_env().await;
 
     // Setup the inputs.
     let mut stdin = SP1Stdin::new();
@@ -90,7 +90,7 @@ async fn main() {
 
     if args.execute {
         // Execute the program
-        let (output, report) = client.execute(image, &stdin).run().unwrap();
+        let (output, report) = client.execute(image, &stdin).run().await.unwrap();
         info!("Program executed successfully.");
 
         let output = VerificationOutput::abi_decode(output.as_slice()).unwrap();
@@ -100,7 +100,7 @@ async fn main() {
     } else {
         // NOTE: Does not work with prover network.
         // Setup the program for proving.
-        let (pk, vk) = client.setup(image);
+        let (pk, vk) = client.setup(image).await;
 
         // Generate the proof
         let start = std::time::Instant::now();
@@ -108,6 +108,7 @@ async fn main() {
             .prove(&pk, &stdin)
             .groth16()
             .run()
+            .await
             .expect("failed to generate proof");
         let duration = start.elapsed().as_secs_f64();
 
@@ -115,7 +116,7 @@ async fn main() {
         info!("Proof: {:?}", proof);
 
         // Verify the proof.
-        client.verify(&proof, &vk).expect("failed to verify proof");
+        client.verify(&proof, &vk).await.expect("failed to verify proof");
         info!("Successfully verified proof!");
     }
 }

@@ -1,6 +1,6 @@
 use clap::Parser;
 use dotenv::dotenv;
-use sp1_sdk::{include_elf, ProverClient, SP1Stdin};
+use sp1_sdk::{include_elf, ProveRequest, Prover, ProverClient, ProvingKey, SP1Stdin};
 use std::path::PathBuf;
 use tracing::info;
 use zkemail_core::VerificationOutput;
@@ -10,8 +10,8 @@ use zkemail_helpers::{
 };
 
 /// The ELF (executable and linkable format) file for the Succinct RISC-V zkVM.
-pub const EMAIL_VERIFY_ELF: &[u8] = include_elf!("email_verify");
-pub const EMAIL_WITH_REGEX_ELF: &[u8] = include_elf!("email_with_regex_verify");
+pub const EMAIL_VERIFY_ELF: sp1_sdk::Elf = include_elf!("email_verify");
+pub const EMAIL_WITH_REGEX_ELF: sp1_sdk::Elf = include_elf!("email_with_regex_verify");
 
 /// The arguments for the command.
 #[derive(Parser, Debug)]
@@ -90,7 +90,7 @@ async fn main() {
 
     if args.execute {
         // Execute the program
-        let (output, report) = client.execute(image, &stdin).run().await.unwrap();
+        let (output, report) = client.execute(image, stdin).await.unwrap();
         info!("Program executed successfully.");
 
         let output = VerificationOutput::abi_decode(output.as_slice()).unwrap();
@@ -98,16 +98,14 @@ async fn main() {
 
         info!("Number of cycles: {}", report.total_instruction_count());
     } else {
-        // NOTE: Does not work with prover network.
         // Setup the program for proving.
-        let (pk, vk) = client.setup(image).await;
+        let pk = client.setup(image).await.expect("failed to setup prover");
 
         // Generate the proof
         let start = std::time::Instant::now();
         let proof = client
-            .prove(&pk, &stdin)
+            .prove(&pk, stdin)
             .groth16()
-            .run()
             .await
             .expect("failed to generate proof");
         let duration = start.elapsed().as_secs_f64();
@@ -116,7 +114,7 @@ async fn main() {
         info!("Proof: {:?}", proof);
 
         // Verify the proof.
-        client.verify(&proof, &vk).await.expect("failed to verify proof");
+        client.verify(&proof, pk.verifying_key(), None).expect("failed to verify proof");
         info!("Successfully verified proof!");
     }
 }

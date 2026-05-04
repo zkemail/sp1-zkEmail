@@ -1,6 +1,7 @@
 use clap::Parser;
 use dotenv::dotenv;
-use sp1_sdk::{include_elf, ProveRequest, Prover, ProverClient, ProvingKey, SP1Stdin};
+use sp1_sdk::{include_elf, ProveRequest, Prover, ProverClient, ProvingKey, SP1ProofMode, SP1Stdin};
+use sp1_sdk::network::{FulfillmentStrategy, NetworkMode};
 use std::path::PathBuf;
 use tracing::info;
 use zkemail_core::VerificationOutput;
@@ -58,9 +59,6 @@ async fn main() {
         std::process::exit(1);
     }
 
-    // Setup the prover client.
-    let client = ProverClient::from_env().await;
-
     // Setup the inputs.
     let mut stdin = SP1Stdin::new();
 
@@ -89,7 +87,9 @@ async fn main() {
     }
 
     if args.execute {
-        // Execute the program
+        // Use env-based client for local execution
+        let client = ProverClient::from_env().await;
+
         let (output, report) = client.execute(image, stdin).await.unwrap();
         info!("Program executed successfully.");
 
@@ -98,14 +98,19 @@ async fn main() {
 
         info!("Number of cycles: {}", report.total_instruction_count());
     } else {
-        // Setup the program for proving.
+        // Use explicit network client with Reserved mode for proving
+        let client = ProverClient::builder()
+            .network_for(NetworkMode::Reserved)
+            .build()
+            .await;
+
         let pk = client.setup(image).await.expect("failed to setup prover");
 
-        // Generate the proof
         let start = std::time::Instant::now();
         let proof = client
             .prove(&pk, stdin)
-            .groth16()
+            .mode(SP1ProofMode::Groth16)
+            .strategy(FulfillmentStrategy::Reserved)
             .await
             .expect("failed to generate proof");
         let duration = start.elapsed().as_secs_f64();
@@ -113,7 +118,6 @@ async fn main() {
         info!("Successfully generated proof in {:.2}s!", duration);
         info!("Proof: {:?}", proof);
 
-        // Verify the proof.
         client.verify(&proof, pk.verifying_key(), None).expect("failed to verify proof");
         info!("Successfully verified proof!");
     }

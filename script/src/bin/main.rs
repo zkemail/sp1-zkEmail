@@ -110,7 +110,7 @@ async fn main() {
         let proof = client
             .prove(&pk, stdin)
             .mode(SP1ProofMode::Groth16)
-            .strategy(FulfillmentStrategy::Reserved)
+            .strategy(FulfillmentStrategy::Hosted)
             .await
             .expect("failed to generate proof");
         let duration = start.elapsed().as_secs_f64();

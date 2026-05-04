@@ -86,7 +86,7 @@ pub async fn generate_proof(
         .prove(&pk, stdin)
         .timeout(Duration::from_secs(600))
         .mode(SP1ProofMode::Groth16)
-        .strategy(FulfillmentStrategy::Reserved)
+        .strategy(FulfillmentStrategy::Hosted)
         .await
         .map_err(|err| {
             tracing::error!("Error generating proof: {:?}", err);

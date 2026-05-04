@@ -3,6 +3,7 @@ use std::time::Duration;
 use axum::{http::StatusCode, Json};
 use serde::{Deserialize, Serialize};
 use sp1_sdk::{Elf, HashableKey, ProveRequest, Prover, ProverClient, ProvingKey, SP1ProofMode, SP1Stdin};
+use sp1_sdk::network::{FulfillmentStrategy, NetworkMode};
 use tracing::error;
 use tracing::info;
 use zkemail_core::VerificationOutput;
@@ -31,7 +32,7 @@ pub async fn generate_proof(
     tracing::info!("Initializing sp1 client");
     // Initialize prover
     let client = ProverClient::builder()
-        .network()
+        .network_for(NetworkMode::Reserved)
         .private_key(&private_key)
         .rpc_url(&rpc_url)
         .build()
@@ -85,6 +86,7 @@ pub async fn generate_proof(
         .prove(&pk, stdin)
         .timeout(Duration::from_secs(600))
         .mode(SP1ProofMode::Groth16)
+        .strategy(FulfillmentStrategy::Reserved)
         .await
         .map_err(|err| {
             tracing::error!("Error generating proof: {:?}", err);

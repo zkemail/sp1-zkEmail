@@ -98,9 +98,9 @@ async fn main() {
 
         info!("Number of cycles: {}", report.total_instruction_count());
     } else {
-        // Use explicit network client with Reserved mode for proving
+        // Use explicit network client with Mainnet mode for proving
         let client = ProverClient::builder()
-            .network_for(NetworkMode::Reserved)
+            .network_for(NetworkMode::Mainnet)
             .build()
             .await;
 
@@ -110,7 +110,7 @@ async fn main() {
         let proof = client
             .prove(&pk, stdin)
             .mode(SP1ProofMode::Groth16)
-            .strategy(FulfillmentStrategy::Hosted)
+            .strategy(FulfillmentStrategy::Auction)
             .await
             .expect("failed to generate proof");
         let duration = start.elapsed().as_secs_f64();
